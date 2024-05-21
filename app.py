@@ -13,7 +13,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import os
 import requests
 import json
-
+# ai and plagiarism are together in this 
 # Ensure necessary NLTK data packages are downloaded
 nltk.download('punkt')
 nltk.download('stopwords')
