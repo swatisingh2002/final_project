@@ -1,0 +1,180 @@
+from flask import Flask, render_template, request, jsonify
+from transformers import GPT2Tokenizer, GPT2LMHeadModel
+import torch
+import nltk
+from nltk.probability import FreqDist
+from collections import Counter
+from nltk.corpus import stopwords
+import string
+import plotly.express as px
+import plotly.io as pio
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import os
+import requests
+import json
+
+# Ensure necessary NLTK data packages are downloaded
+nltk.download('punkt')
+nltk.download('stopwords')
+
+# Load GPT-2 tokenizer and model
+tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+model = GPT2LMHeadModel.from_pretrained('gpt2')
+
+app = Flask(__name__)
+
+# Function to read a file
+def read_file(file):
+    return file.read().decode('utf-8')
+
+# Function to vectorize texts
+def vectorize(texts):
+    vectorizer = TfidfVectorizer()
+    tfidf_matrix = vectorizer.fit_transform(texts)
+    return tfidf_matrix.toarray()
+
+# Function to calculate similarity between two documents
+def similarity(doc1, doc2):
+    return cosine_similarity([doc1], [doc2])[0][0]
+
+# Route for the main index page
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+# Route for uploading and checking files for plagiarism
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_files():
+    result = None
+    if request.method == 'POST':
+        if 'file1' not in request.files or 'file2' not in request.files:
+            return "Please upload both files", 400
+
+        file1 = request.files['file1']
+        file2 = request.files['file2']
+
+        if file1.filename == '' or file2.filename == '':
+            return "Please select both files", 400
+
+        text1 = read_file(file1)
+        text2 = read_file(file2)
+        student_notes = [text1, text2]
+
+        vectors = vectorize(student_notes)
+        sim_score = similarity(vectors[0], vectors[1])
+        sim_score = round(sim_score, 2)
+
+        student_a = os.path.splitext(file1.filename)[0]
+        student_b = os.path.splitext(file2.filename)[0]
+        result = f"{student_a} is {sim_score * 100}% similar to {student_b}"
+
+    return render_template('upload.html', result=result)
+
+# Route for checking text for AI generation
+@app.route('/check', methods=['GET', 'POST'])
+def check_text():
+    result = None
+    if request.method == 'POST':
+        text_to_check = request.form['text_to_check']
+
+        burp0_url = "https://papersowl.com:443/plagiarism-checker-send-data"
+        burp0_cookies = {
+            "PHPSESSID": "qjc72e3vvacbtn4jd1af1k5qn1",
+        }
+
+        burp0_headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:100.0) Gecko/20100101 Firefox/100.0",
+            "Accept": "*/*",
+            "Accept-Language": "ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3",
+            "Accept-Encoding": "gzip, deflate",
+            "Referer": "https://papersowl.com/free-plagiarism-checker",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "X-Requested-With": "XMLHttpRequest",
+            "Origin": "https://papersowl.com",
+            "Dnt": "1",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "no-cors",
+            "Sec-Fetch-Site": "same-origin",
+            "Pragma": "no-cache",
+            "Cache-Control": "no-cache",
+            "Te": "trailers",
+            "Connection": "close"
+        }
+
+        burp0_data = {
+            "is_free": "false",
+            "plagchecker_locale": "en",
+            "product_paper_type": "1",
+            "title": '',
+            "text": str(text_to_check)
+        }
+
+        try:
+            r = requests.post(burp0_url, headers=burp0_headers, cookies=burp0_cookies, data=burp0_data)
+            r.raise_for_status()
+            result = r.json()
+
+            matches = [{"url": match["url"], "percent": match["percent"]} for match in result.get("matches", [])]
+
+            response_data = {
+                "word_count": result.get("words_count", "N/A"),
+                "Plagiarism": 100 - float(result.get("percent", 0)),
+                "matches": matches
+            }
+        except requests.exceptions.RequestException as e:
+            result = {"error": str(e)}
+        except json.JSONDecodeError as e:
+            result = {"error": "Failed to parse JSON response: " + str(e)}
+
+    return render_template('check.html', result=result)
+
+# Route for checking text for AI generation (GPT-2 analysis)
+@app.route('/ai-check', methods=['GET', 'POST'])
+def ai_check():
+    if request.method == 'POST':
+        text_area = request.form['text_area']
+        perplexity = calculate_perplexity(text_area)
+        burstiness_score = calculate_burstiness(text_area)
+        plot_html = plot_top_repeated_words(text_area)
+
+        result_message = "Text Analysis Result: Likely not generated by AI"
+        if perplexity > 50 and burstiness_score < 2.5:
+            result_message = "Text Analysis Result: AI generated content"
+
+        return render_template('ai_result.html', text_area=text_area, perplexity=perplexity, 
+                               burstiness_score=burstiness_score, result_message=result_message, plot_html=plot_html)
+
+    return render_template('ai_check.html')
+
+def calculate_perplexity(text):
+    encoded_input = tokenizer.encode(text, add_special_tokens=True, return_tensors='pt')
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    encoded_input = encoded_input.to(device)
+    model.to(device)
+    with torch.no_grad():
+        outputs = model(encoded_input, labels=encoded_input)
+        loss = outputs.loss
+        perplexity = torch.exp(loss)
+    return perplexity.item()
+
+def calculate_burstiness(text):
+    tokens = nltk.word_tokenize(text.lower())
+    word_freq = FreqDist(tokens)
+    repeated_count = sum(count > 1 for count in word_freq.values())
+    burstiness_score = repeated_count / len(word_freq)
+    return burstiness_score
+
+def plot_top_repeated_words(text):
+    tokens = text.split()
+    stop_words = set(stopwords.words('english'))
+    tokens = [token.lower() for token in tokens if token.lower() not in stop_words and token.lower() not in string.punctuation]
+    word_counts = Counter(tokens)
+    top_words = word_counts.most_common(15)
+    words = [word for word, count in top_words]
+    counts = [count for word, count in top_words]
+    fig = px.bar(x=words, y=counts, labels={'x': 'Words', 'y': 'Counts'}, title='Top 15 Most Repeated Words')
+    return pio.to_html(fig, full_html=False)
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5555)

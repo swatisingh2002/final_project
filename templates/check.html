@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Text for Plagiarism</title>
+</head>
+<body>
+    <h1>Check Text for Plagiarism</h1>
+    <form method="POST">
+        <textarea name="text_to_check" rows="10" cols="150" placeholder="Enter text to check"></textarea>
+        <br>
+        <button type="submit">Check Plagiarism</button>
+    </form>
+    {% if result %}
+    {% if result.error %}
+        <p class="error">Error: {{ result.error }}</p>
+    {% else %}
+        {% if result.word_count %}
+            <p>Word Count: {{ result.word_count }}</p>
+        {% endif %}
+        {% if result.plagiarism %}
+            <p>Plagiarism: {{ result.plagiarism }}%</p>
+        {% endif %}
+        {% if result.matches %}
+            <p>Matches:</p>
+            <ul>
+                {% for match in result.matches %}
+                    <li>URL: <a href="{{ match.url }}">{{ match.url }}</a>, Percent: {{ match.percent }}%</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+
+
+    <a href="/">Go Back</a>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Files</title>
+</head>
+<body>
+    <h1>Upload Files for Plagiarism Check</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <label for="file1">File 1:</label>
+        <input type="file" name="file1" id="file1">
+        <br>
+        <label for="file2">File 2:</label>
+        <input type="file" name="file2" id="file2">
+        <br>
+        <button type="submit">Check Similarity</button>
+    </form>
+    {% if result %}
+        <h2>Result</h2>
+        <p>{{ result }}</p>
+    {% endif %}
+    <a href="/">Go Back</a>
+</body>
+</html>
