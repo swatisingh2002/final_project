@@ -4,6 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analysis Result</title>
+    <style>
+        body{
+            background-size: cover;
+           background-color: rgb(220, 224, 255);
+           display:block;
+    justify-content:center;
+    align-items:center;
+    height: 100vh;
+    width:100%;
+    margin-left: 80px;
+        }
+        
+        h1{
+           
+    text-align: center;
+    background-color: azure;
+    color:rgb(73, 42, 73);
+    margin-top: 20px;
+    margin-right: 120px;
+    margin-bottom: 49px;
+    margin-left: 120px;
+}
+h2{
+    color:rgb(25, 64, 136);
+
+}
+        
+    </style>
 </head>
 <body>
     <h1>AI Generated Text Checker</h1>
@@ -12,13 +40,13 @@
         <p>{{ text_area }}</p>
     </div>
     <h2>Detection Score (Perplexity Score and Burstiness Score)</h2>
-    <p>Perplexity Score for the given text: {{ perplexity }}</p>
-    <p>Burstiness Score for the given text: {{ burstiness_score }}</p>
+    <p><h4>Perplexity Score for the given text: {{ perplexity }}</h4></p>
+    <p><h4>Burstiness Score for the given text: {{ burstiness_score }}</h4></p>
     <h3>{{ result_message }}</h3>
     <h2>Basic Details</h2>
     <div>{{ plot_html|safe }}</div>
     <h2>Disclaimer</h2>
-    <p>Disclaimer: AI plagiarism detector apps can assist in identifying potential instances of plagiarism; however, it is important to note that their results may not be entirely flawless or completely reliable. These tools employ advanced algorithms, but they can still produce false positives or false negatives. Therefore, it is recommended to use AI plagiarism detectors as a supplementary tool alongside human judgment and manual verification for accurate and comprehensive plagiarism detection.</p>
+    <p><h5>Disclaimer: AI plagiarism detector apps can assist in identifying potential instances of plagiarism; however, it is important to note that their results may not be entirely flawless or completely reliable. These tools employ advanced algorithms, but they can still produce false positives or false negatives. Therefore, it is recommended to use AI plagiarism detectors as a supplementary tool alongside human judgment and manual verification for accurate and comprehensive plagiarism detection.</h5></p>
     <a href="/">Go Back</a>
 </body>
 </html>

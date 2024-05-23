@@ -4,21 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Files</title>
+    <style>
+body{
+    background-color: rgb(176, 210, 243);
+    display: block;
+    width: 100%;
+    height: 100vh;
+    justify-content:center;
+    align-items:center;
+    
+    margin-left: 80px;
+
+}
+button {
+    text-align: center;
+    width:100%;
+    height: 40px;
+    background:  rgba(128, 36, 221, 0.812);
+    border: none;
+    outline:none;
+    display:block;
+    border-radius: 40px;
+    cursor:pointer;
+    font-size: 1em;
+    color:#fff;
+    font-weight: 500;
+    margin-top: 30px ;
+    margin-bottom: 50px;
+    margin-left: 360px;
+    width:40%;
+    align-items: center;
+}
+h1{
+    text-align: center;
+    background-color: azure;
+    color:purple;
+    margin-top: 20px;
+    margin-right: 120px;
+    margin-bottom: 49px;
+}
+#file1{
+    height: 50px;
+    width: 20%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-weight: 400;
+    font-size: 20px;
+}
+#file2{
+    height: 50px;
+    width: 20%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+    </style>
 </head>
 <body>
     <h1>Upload Files for Plagiarism Check</h1>
     <form method="POST" enctype="multipart/form-data">
-        <label for="file1">File 1:</label>
+        <label for="file1"><h4>File 1:</h4></label>
         <input type="file" name="file1" id="file1">
         <br>
-        <label for="file2">File 2:</label>
+        <label for="file2"><h4>File 2:</h4></label>
         <input type="file" name="file2" id="file2">
         <br>
         <button type="submit">Check Similarity</button>
     </form>
     {% if result %}
         <h2>Result</h2>
-        <p>{{ result }}</p>
+        <p><h3>{{ result }}</h3></p>
     {% endif %}
     <a href="/">Go Back</a>
 </body>

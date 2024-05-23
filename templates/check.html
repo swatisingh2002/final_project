@@ -4,8 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Check Text for Plagiarism</title>
+    <style>
+        body{
+            background-image: url(bbpic.jpg);
+           background-size: cover;
+           background-color: rgb(220, 224, 255);
+           display:block;
+    justify-content:center;
+    align-items:center;
+    height: 100vh;
+    width:100%;
+    margin-left: 80px;
+        }
+        
+    button {
+    text-align: center;
+    width:100%;
+    height: 40px;
+    background:  rgba(128, 36, 221, 0.812);
+    border: none;
+    outline:none;
+    display:block;
+    border-radius: 40px;
+    cursor:pointer;
+    font-size: 1em;
+    color:#fff;
+    font-weight: 500;
+    margin-top: 30px ;
+    margin-bottom: 50px;
+    margin-left: 360px;
+    width:40%;
+    align-items: center;
+}
+h1{
+    text-align: center;
+    background-color: azure;
+    color:purple;
+    margin-top: 20px;
+    margin-right: 120px;
+    margin-bottom: 49px;
+}
+
+    </style>
 </head>
 <body>
+    <section>
+    <div class="box">
     <h1>Check Text for Plagiarism</h1>
     <form method="POST">
         <textarea name="text_to_check" rows="10" cols="150" placeholder="Enter text to check"></textarea>
@@ -33,8 +77,11 @@
     {% endif %}
 {% endif %}
 
-
+  
 
     <a href="/">Go Back</a>
+</div>
+</section>
+
 </body>
 </html>
