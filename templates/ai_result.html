@@ -6,6 +6,7 @@
     <title>Analysis Result</title>
     <style>
         body{
+            background-image: url('{{ url_for('static', filename='bbpic.jpg') }}');
             background-size: cover;
            background-color: rgb(220, 224, 255);
            display:block;
@@ -47,6 +48,6 @@ h2{
     <div>{{ plot_html|safe }}</div>
     <h2>Disclaimer</h2>
     <p><h5>Disclaimer: AI plagiarism detector apps can assist in identifying potential instances of plagiarism; however, it is important to note that their results may not be entirely flawless or completely reliable. These tools employ advanced algorithms, but they can still produce false positives or false negatives. Therefore, it is recommended to use AI plagiarism detectors as a supplementary tool alongside human judgment and manual verification for accurate and comprehensive plagiarism detection.</h5></p>
-    <a href="/">Go Back</a>
+    <a href="/"><h3>Go Back</h3></a>
 </body>
 </html>

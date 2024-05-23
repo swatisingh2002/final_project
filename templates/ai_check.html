@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Generated Text Checker</title>
+    <title sty>AI Generated Text Checker</title>
     <style>
         body{
+            background-image: url('{{ url_for('static', filename='bbpic.jpg') }}');
             background-color: rgb(200, 240, 241);
-            background-image: url(ai.jpg);
            background-size: cover;
            display:block;
     justify-content:center;
@@ -36,7 +36,7 @@
 }
 h1{
     text-align: center;
-    color:rgb(98, 41, 109);
+    color:rgb(15, 14, 14);
     margin-top: 20px;
     margin-right: 120px;
     margin-bottom: 49px;
@@ -53,6 +53,6 @@ h1{
         <br>
         <button type="submit">Analyze</button>
     </form>
-    <a href="/">Go Back</a>
+    <a href="/" style="color:black"><h3>Go Back</h3></a>
 </body>
 </html>

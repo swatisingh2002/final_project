@@ -6,6 +6,7 @@
     <title>Upload Files</title>
     <style>
 body{
+    background-image: url('{{ url_for('static', filename='back.jpg') }}');
     background-color: rgb(176, 210, 243);
     display: block;
     width: 100%;
@@ -52,6 +53,7 @@ h1{
     font-size: 20px;
 }
 #file2{
+    
     height: 50px;
     width: 20%;
     margin-top: 20px;
@@ -65,18 +67,18 @@ h1{
 <body>
     <h1>Upload Files for Plagiarism Check</h1>
     <form method="POST" enctype="multipart/form-data">
-        <label for="file1"><h4>File 1:</h4></label>
-        <input type="file" name="file1" id="file1">
+        <label for="file1"><h4 style="color:white"> File 1:</h4></label>
+        <input type="file" name="file1" id="file1" style="color:white">
         <br>
-        <label for="file2"><h4>File 2:</h4></label>
-        <input type="file" name="file2" id="file2">
+        <label for="file2"><h4 style="color:white">File 2:</h4></label>
+        <input type="file" name="file2" id="file2" style="color:white">
         <br>
         <button type="submit">Check Similarity</button>
     </form>
     {% if result %}
-        <h2>Result</h2>
-        <p><h3>{{ result }}</h3></p>
+        <h2 style="color:white">Result</h2>
+        <p><h3 style="color:white" >{{ result }}</h3></p>
     {% endif %}
-    <a href="/">Go Back</a>
+    <a href="/" style="color:white"><h3>Go Back</h3></a>
 </body>
 </html>
