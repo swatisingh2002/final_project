@@ -5,5 +5,6 @@ nltk
 plotly
 requests
 scikit-learn
+pandas
 
 -e .
